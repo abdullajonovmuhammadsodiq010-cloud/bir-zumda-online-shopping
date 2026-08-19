@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bir Zumda - Mahsulotlar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+</head>
+<body data-page="mahsulotlar">
+<header>
+    <div class="container navbar">
+        <a href="{% url 'index' %}" class="logo"><i class="fa-solid fa-bolt"></i> Bir Zumda</a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="{% url 'index' %}" data-page="index">Bosh sahifa</a></li>
+            <li><a href="{% url 'mahsulotlar' %}" data-page="mahsulotlar">Mahsulotlar</a></li>
+            <li><a href="{% url 'blog' %}" data-page="blog">Blog</a></li>
+            <li><a href="{% url 'biz_haqimizda' %}" data-page="biz-haqimizda">Biz haqimizda</a></li>
+            <li><a href="{% url 'aloqa' %}" data-page="aloqa">Aloqa</a></li>
+        </ul>
+        <div class="nav-icons">
+            <a href="#" id="theme-toggle" title="Tungi rejim"><i class="fa-solid fa-moon"></i></a>
+            <a href="{% url 'mahsulotlar' %}"><i class="fa-solid fa-search"></i></a>
+            <a href="{% url 'login' %}" title="Shaxsiy kabinet"><i class="fa-regular fa-user"></i></a>
+            <a href="{% url 'savatcha' %}" style="position: relative;">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-badge" id="cart-badge-count">2</span>
+            </a>
+            <div class="mobile-toggle" id="mobile-menu-btn"><i class="fa-solid fa-bars-staggered"></i></div>
+        </div>
+    </div>
+</header>
+
+<main class="page-section">
+    <div class="container">
+        <div class="section-title"><h1>Mahsulotlar</h1><p>Barcha maishiy texnika va elektronika bir joyda</p><div class="line"></div></div>
+        <div class="shop-layout">
+            <aside class="shop-sidebar">
+                <div class="filter-group"><h4>Toifalar</h4><ul class="filter-list">
+                    <li><label><input type="checkbox" {% if not selected_category %}checked{% endif %} onclick="window.location.href='{% url 'mahsulotlar' %}'"> Barchasi</label></li>
+                    {% for cat in categories %}
+                    <li><label><input type="checkbox" {% if selected_category == cat %}checked{% endif %} onclick="window.location.href='{% url 'mahsulotlar' %}?category={{ cat|urlencode }}'"> {{ cat }}</label></li>
+                    {% endfor %}
+                </ul></div>
+            </aside>
+            <div class="shop-main">
+                <form class="shop-header" method="get" action="{% url 'mahsulotlar' %}">
+                    <div class="shop-search"><i class="fa-solid fa-search"></i><input type="text" name="search"  placeholder="Model yoki nomini kiriting..."><button type="submit" class="shop-search-btn" aria-label="Qidirish"><i class="fa-solid fa-search"></i></button></div>
+                </form>
+
+
+<div class="product-grid">
+{% for product in products %}
+<div class="product-card">
+        {% if product.discount %}<div class="badge">-{{ product.discount|floatformat:0 }}%</div>{% endif %}
+        <a href="{% url 'mahsulot_detail' product.pk %}" class="product-img"><img src="{% if product.image %}{{ product.image.url }}{% else %}https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=800&q=80{% endif %}" alt="{{ product.name }}"></a>
+        <div class="product-info"><div class="product-category">{{ product.category }}</div><h3 class="product-title"><a href="{% url 'mahsulot_detail' product.pk %}">{{ product.name }}</a></h3><div class="product-price-row"><div class="price-box">{% if product.discount %}<span class="old-price">{{ product.price|floatformat:0 }} so'm</span><span class="price">{{ product.discounted_price|floatformat:0 }} so'm</span>{% else %}<span class="price">{{ product.price|floatformat:0 }} so'm</span>{% endif %}</div><a href="{% url 'savatcha' %}" class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i></a></div><a href="{% url 'mahsulot_detail' product.pk %}" class="btn btn-outline" style="margin-top:14px;width:100%;">Batafsil</a></div>
+    </div>
+{% empty %}
+<p>Hech qanday mahsulot topilmadi.</p>
+{% endfor %}
+</div>
+
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="{% url 'index' %}" class="logo"><i class="fa-solid fa-bolt"></i> Bir Zumda</a>
+                <p style="margin-top: 15px;">O'zbekistondagi eng tezkor va ishonchli maishiy texnika xarid qilish platformasi. Orzuingizdagi texnikani bir zumda xarid qiling!</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Kompaniya</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'biz_haqimizda' %}">Biz haqimizda</a></li>
+                    <li><a href="{% url 'mahsulotlar' %}">Do'konlarimiz</a></li>
+                    <li><a href="{% url 'blog' %}">Blog va Yangiliklar</a></li>
+                    <li><a href="#">Bo'sh ish o'rinlari</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Mijozlarga</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'aloqa' %}">Aloqa</a></li>
+                    <li><a href="#">Yetkazib berish shartlari</a></li>
+                    <li><a href="#">Muddatli to'lov</a></li>
+                    <li><a href="#">Kafolat va qaytarish</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Yangiliklarga obuna</h4>
+                <p>Yangi texnikalar va chegirmalar haqida xabardor bo'ling!</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Emailingiz" required>
+                    <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Bir Zumda MChJ. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </div>
+</footer>
+<div id="toast-container" class="toast-container"></div>
+<script src="{% static 'app/js/app.js' %}"></script>
+</body>
+</html>
