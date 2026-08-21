@@ -37,14 +37,14 @@ def mahsulotlar(request):
     }
     return render(request, 'mahsulotlar.html', context)
 
-def mahsulot_detail(product, pk):
-    product = get_object_or_404(product,pk)
-
+def mahsulot_detail(request, pk):
+    product = get_object_or_404(ProductModel, pk=pk)
+    related_products = ProductModel.objects.filter(category=product.category).exclude(pk=product.pk)[:4]
     context = {
         'product': product,
+        'related_products': related_products,
     }
-    return render(product, 'mahsulot-detail.html')
-
+    return render(request, 'mahsulot-detail.html', context)
 
 def login_view(request):
     if request.method == 'POST':
